@@ -87,6 +87,12 @@ start_proj()
 	edit_proj $p
 }
 
+if uname | grep -q "Darwin"; then
+    darwin=1
+else
+    darwin=0
+fi
+
 list_projects()
 {
 	printf "%-40s" "Project"
@@ -94,7 +100,12 @@ list_projects()
 	for p in $gtd/Projects/*; do
 		q=`basename $p`
 		printf "%-40s|  " "$q"
-		stat -c=%x "$p"
+		if [ "$darwin" = "1" ]; then
+			stat -f "%m%t%Sm" "$p" | cut -f2-
+		else
+			stat -c %Y "$p"
+		fi
+
 	done
 }
 
