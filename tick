@@ -43,7 +43,7 @@ if [ $d -ne 1 ]; then
 fi
 
 if [ -s "${GTDDIR}/tickler/$d" ]; then
-	vim -c ":split ${GTDDIR}/next_actions.otl" "${GTDDIR}/tickler/$d"
+	vim -o "${GTDDIR}/next_actions.otl" "${GTDDIR}/tickler/$d"
 else
 	echo "${GTDDIR}/tickler/$d is empty"
 fi
