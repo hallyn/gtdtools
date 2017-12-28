@@ -5,8 +5,8 @@ CONFIGDIR=~/.config
 
 mkdir -p "${CONFIGDIR}/gtd"
 mkdir -p "${GTDDIR}/tickler/repeating"
-mkdir -p "${GTDDIR}/tickler/Projects"
-mkdir -p "${GTDDIR}/tickler/Completed"
+mkdir -p "${GTDDIR}/Projects"
+mkdir -p "${GTDDIR}/Completed"
 mkdir -p ~/bin
 
 cat > "${CONFIGDIR}/gtd/config" << EOF
