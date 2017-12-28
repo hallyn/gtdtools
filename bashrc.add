@@ -1,0 +1,5 @@
+##########
+alias p=project
+[ -e $HOME/gtd_bash_completion ] && . $HOME/gtd_bash_completion
+export PATH=$PATH:~/bin
+##########

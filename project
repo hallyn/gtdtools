@@ -2,7 +2,12 @@
 
 # Copyright (C) 2009-2017 Serge Hallyn <serge@hallyn.com>
 
-gtd=$HOME/gtd
+GTDDIR=~/gtd
+CONFIGDIR=~/.config
+
+# User might specify different GTD dir
+[ -f "${CONFIGDIR}/gtd/config" ] && . "${CONFIGDIR}/gtd/config"
+gtd=${GTDDIR}
 
 VIM=vim
 type gvim > /dev/null 2>&1 && VIM=gvim

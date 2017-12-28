@@ -50,3 +50,4 @@ for f in $filelist; do
 done
 rm nextlist
 rm *.bak
+date +%m > lastrun

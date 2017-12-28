@@ -19,6 +19,7 @@ fi
 if [ "$last" != "$m" ]; then
 	echo "Tickler files are out of date"
 	echo "Running "${GTDDIR}/tickler/update_repeating" is recommended"
+	read -p "Press enter to continue" x
 fi
 
 fmt() {
@@ -30,7 +31,7 @@ if [ $d -ne 1 ]; then
 	y=$((d-1))
 	unread=""
 	for i in `seq 1 $y`; do
-		x=$(fmt $y)
+		x=$(fmt $i)
 		if grep -q XXX "${GTDDIR}/tickler/${x}"; then
 			unread="${unread} $x"
 		fi
