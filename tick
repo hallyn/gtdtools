@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Copyright (C) 2009-2017 Serge Hallyn <serge@hallyn.com>
+#
+# Edit today's tickler file alongside the GTD nextactions file
+
+GTDDIR=~/gtd
+CONFIGDIR=~/.config
+
+# User might specify different GTD dir
+[ -f "${CONFIGDIR}/gtd/config" ] && . "${CONFIGDIR}/gtd/config"
+
+m=`date +%m`
+
+last="x"
+if [ -f "${GTDDIR}/tickler/lastrun" ]; then
+	last=$(<"${GTDDIR}/tickler/lastrun")
+fi
+if [ "$last" != "$m" ]; then
+	echo "Tickler files are out of date"
+	echo "Running "${GTDDIR}/tickler/update_repeating" is recommended"
+fi
+
+fmt() {
+	printf "%02d" $1
+}
+
+d=`date +%d`
+if [ $d -ne 1 ]; then
+	y=$((d-1))
+	unread=""
+	for i in `seq 1 $y`; do
+		x=$(fmt $y)
+		if grep -q XXX "${GTDDIR}/tickler/${x}"; then
+			unread="${unread} $x"
+		fi
+	done
+	if [ -n "$unread" ]; then
+		echo "Unhandled tickler files this month: $unread"
+		read -p "Press enter to continue" x
+	fi
+fi
+
+vim -c ":split ${GTDDIR}/next_actions.otl" ${GTDDIR}/tickler/$d

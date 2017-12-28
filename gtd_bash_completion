@@ -1,0 +1,23 @@
+_project() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="l e n s c p a list edit new start complete postpone actions h help cat"
+
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0;
+    elif [ $prev = "l" -o $prev = "list" ]; then
+        COMPREPLY=("")
+        return 0;
+    else
+        local names=$(for x in $HOME/gtd/Projects/*; do basename $x; done)
+        COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+        return 0;
+    fi
+}
+
+complete -F _project project
+complete -F _project p

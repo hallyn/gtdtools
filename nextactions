@@ -1,0 +1,9 @@
+#!/bin/bash
+
+GTDDIR=~/gtd
+CONFIGDIR=~/.config
+
+# User might specify different GTD dir
+[ -f "${CONFIGDIR}/gtd/config" ] && . "${CONFIGDIR}/gtd/config"
+
+cat "${GTDDIR}/next_actions.otl"

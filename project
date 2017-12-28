@@ -1,0 +1,178 @@
+#!/bin/bash
+
+# Copyright (C) 2009-2017 Serge Hallyn <serge@hallyn.com>
+
+gtd=$HOME/gtd
+
+VIM=vim
+type gvim > /dev/null 2>&1 && VIM=gvim
+
+if [ ! -d $gtd/Projects ]; then
+	echo "Please mount gtd"
+	exit 1
+fi
+
+delete_project()
+{
+	local p="$1"
+	if [ ! -e "$gtd/Projects/$p" ]; then
+		echo "No such project: $p"
+		exit 1
+	fi
+	read -p "Are you sure you want to delete $p?" y
+	if [ "$y" = "y" -o $y = "yes" ]; then
+		rm -rf "$gtd/Projects/$p"
+		exit 0;
+	fi
+	echo "Not deleting"
+}
+
+new_proj()
+{
+	local p="$1"
+
+	if [ -e "$gtd/Projects/$p" ]; then
+		echo "Project $p already exists"
+		exit 1
+	fi
+	mkdir -p "$gtd/Projects/$p"
+}
+
+cat_proj()
+{
+	local p="$1"
+	local d="$gtd/Projects/$p"
+
+	if [ -f "$d" ]; then
+		cat "$d"
+		return
+	fi
+	if [ ! -d "$d" ]; then
+		echo "Project $p does not exist"
+		exit 1
+	fi
+	for f in "$d/summary.otl" "$d/log.otl" "$d/actions.otl"; do
+		if [ -f $f ]; then
+			echo ">>>> $f <<<<"
+			cat $f
+		fi
+	done
+}
+
+edit_proj()
+{
+	local p="$1"
+	local d="$gtd/Projects/$p"
+
+	if [ -f "$d" ]; then
+		$VIM "$d"
+		return
+	fi
+	if [ ! -d "$d" ]; then
+		echo "Project $p does not exist"
+		exit 1
+	fi
+	$VIM -o "$d/summary.otl" "$d/log.otl" "$d/actions.otl"
+}
+
+start_proj()
+{
+	local p="$1"
+	new_proj $p
+	edit_proj $p
+}
+
+list_projects()
+{
+	printf "%-40s" "Project"
+	echo "|  Last updated"
+	for p in $gtd/Projects/*; do
+		q=`basename $p`
+		printf "%-40s|  " "$q"
+		stat -c=%x "$p"
+	done
+}
+
+complete_proj()
+{
+	local p="$1"
+	y=`date +%Y`
+	d="$gtd/Completed/$y"
+	newp="$d/$p"
+	if [ -d "$d/$p" ]; then
+		i=1;
+		while [ -d "$d/$p.$i" ]; do
+			i=$((i+1))
+		done
+		echo "A completed $p already exists, therefore I am"
+		echo "using $p.$i as the project name."
+		newp="$d/$p.$i"
+	fi
+	mv "$gtd/Projects/$p" "$newp"
+}
+
+postpone_proj()
+{
+	local p="$1"
+	if [ -d "$gtd/Postponed/$p" ]; then
+		echo "A postponed project named $p already exists"
+		exit 1
+	fi
+	mv "$gtd/Projects/$p" "$gtd/Postponed/$p"
+}
+
+list_actions()
+{
+	echo "not yet implemented"
+}
+
+usage()
+{
+	local me=`basename $1`
+	echo "Usage:"
+	echo "  $me [l|list]: list projects"
+	echo "  $me [[e|edit] PROJ]: edit details of PROJ"
+	echo "  $me [[n|new] PROJ]: create new project called PROJ"
+	echo "  $me [[s|start] PROJ]: create new project called PROJ and edit"
+	echo "  $me [[c|complete] PROJ]: move project PROJ to this year's completed list"
+	echo "  $me [[d|delete] PROJ]: delete project PROJ"
+	echo "  $me [[p|postpone] PROJ]: move project to postponed list"
+	echo "  $me [[a|actions] PROJ]: list actions for project PROJ"
+}
+
+if [ $# -eq 0 ]; then
+	usage $0
+	exit 1
+fi
+
+if [ $1 = "l" -o $1 = "list" ]; then
+	list_projects
+	exit 0
+elif [ $1 = "e" -o $1 = "edit" ]; then
+	edit_proj $2
+	exit 0
+elif [ $1 = "cat" ]; then
+	cat_proj $2
+	exit 0
+elif [ $1 = "n" -o $1 = "new" ]; then
+	new_proj $2
+	exit 0
+elif [ $1 = "s" -o $1 = "start" ]; then
+	start_proj $2
+	exit 0
+elif [ $1 = "c" -o $1 = "complete" ]; then
+	complete_proj $2
+	exit 0
+elif [ $1 = "p" -o $1 = "postpone" ]; then
+	postpone_proj $2
+	exit 0
+elif [ $1 = "h" -o $1 = "help" ]; then
+	usage $0
+	exit 0
+elif [ $1 = "a" -o $1 = "actions" ]; then
+	list_actions $2
+	exit 0
+elif [ $1 = "d" -o $1 = "delete" ]; then
+	delete_project $2
+	exit 0
+fi

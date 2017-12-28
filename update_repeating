@@ -1,0 +1,52 @@
+#!/bin/sh -u
+
+# Copyright (C) 2009-2017 Serge Hallyn <serge@hallyn.com>
+
+BASEDIR=$(dirname $0)
+if [ -z "${BASEDIR}" -o "${BASEDIR}" = "." ]; then
+	BASEDIR=$(pwd)
+fi
+
+cd "${BASEDIR}"
+
+fmt() {
+	printf "%02d" $1
+}
+
+# Tickler entries are inserted between 'XXX'.  So on each
+# run, delete all such lines, but keep other (presumably
+# inserted by the user) entries.
+# Do the .bak dance for the old sed on macos.
+for i in `seq 1 31`; do
+	f=$(fmt $i)
+	mv $f $f.bak
+	sed -e '/^XXX.*XXX$/d' $f.bak > $f
+done
+
+month=`date +%m`
+list=`cal | tail -2`
+numdays=`for i in $list; do echo $i; done | tail -1`
+
+# get the list of repeating/ files
+filelist=`/bin/ls repeating/`
+for f in $filelist; do
+	echo reading file repeating/$f
+	grep "^A " repeating/$f > nextlist
+	cat nextlist | while read line; do
+		./insert_entry.py $line
+	done
+	grep "^W " repeating/$f > nextlist
+	cat nextlist | while read line; do
+		./insert_entry.py $line
+	done
+	grep "^D " repeating/$f > nextlist
+	cat nextlist | while read line; do
+		./insert_entry.py $line
+	done
+	grep "^M " repeating/$f > nextlist
+	cat nextlist | while read line; do
+		./insert_entry.py $line
+	done
+done
+rm nextlist
+rm *.bak
