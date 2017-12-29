@@ -114,6 +114,7 @@ complete_proj()
 	local p="$1"
 	y=`date +%Y`
 	d="$gtd/Completed/$y"
+	mkdir -p $d
 	newp="$d/$p"
 	if [ -d "$d/$p" ]; then
 		i=1;
