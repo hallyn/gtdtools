@@ -70,14 +70,22 @@ edit_proj()
 	local d="$gtd/Projects/$p"
 
 	if [ -f "$d" ]; then
-		$VIM "$d"
+		if [ "$EDITOR" = "edbrowse" ]; then
+			edbrowse "$d"
+		else
+			$VIM "$d"
+		fi
 		return
 	fi
 	if [ ! -d "$d" ]; then
 		echo "Project $p does not exist"
 		exit 1
 	fi
-	$VIM -o "$d/summary.otl" "$d/log.otl" "$d/actions.otl"
+	if [ "$EDITOR" = "edbrowse" ]; then
+		edbrowse "$d"
+	else
+		$VIM -o "$d/summary.otl" "$d/log.otl" "$d/actions.otl"
+	fi
 }
 
 start_proj()
