@@ -16,8 +16,6 @@ If you run setup.sh from this directory, it will by default setup;
 1. ~/bin/tick as the script to run each day to view your daily tickler files
 1. ~/bin/project (alias p) as the script to manage projects
 
-As I find time, I'll add more detailed information below.
-
 ## Tickler
 
 A tickler file is machination to help you remember periodic tasks.
