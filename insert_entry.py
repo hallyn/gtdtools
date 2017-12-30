@@ -2,16 +2,32 @@
 
 # Copyright (C) 2009-2017 Serge Hallyn <serge@hallyn.com>
 
+import datetime
+import os
+import string
 import sys
 import time
-import datetime
-import string
 
 debug = False
+
+doall=False
+curday=int(time.strftime("%d"))
+try:
+    if os.getenv("TICKLER_DOALL", "no") == "yes":
+        doall=True
+except:
+    pass
+
+def skipday(day):
+	if doall == False and day < curday:
+		return True
+	return False
 
 def process_bydate(line):
 	day = int(line[0])
 	desc = string.join(line[1:])
+	if skipday(day):
+		return
 	filename = "%02d" % day
 	if debug:
 		print("opening (by date) %s" % filename)
@@ -45,6 +61,8 @@ def process_monthly(line):
 	if (firstdayofmonth > dayhash[day]):
 		tmp += 7
 	tmp += (int(wk)-1)*7
+	if skipday(tmp):
+		return
 	filename = "%02d" % tmp
 	if debug:
 		print("my line was : %s" % str(line))
@@ -66,7 +84,10 @@ def process_annual(line):
 	m = today[1]
 	if months[m-1] != month:
 		return
-	filename = "%02d" % int(date)
+	day = int(date)
+	if skipday(day):
+		return
+	filename = "%02d" % day
 	if debug:
 		print("my line was : %s" % str(line))
 		print("so i'm opening : %s" % filename)
@@ -93,6 +114,9 @@ def process_weekly(line):
 	if debug:
 		print("tmp is now %d" % tmp)
 	while tmp <= 31:
+		if skipday(tmp):
+			tmp += 7
+			continue
 		filename = "%02d" % tmp
 		if debug:
 			print("my line was : %s" % str(line))

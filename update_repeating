@@ -13,6 +13,20 @@ fmt() {
 	printf "%02d" $1
 }
 
+usage() {
+	echo "$0 [all]: update tickler entries"
+	echo "If \"all\" is specified, update entries before today as well"
+	exit 0
+}
+
+if [ $# -gt 0 ]; then
+	if [ "$1" = "-h" -o "$1" = "--help" -o "$1" = "help" ]; then
+		usage
+	elif [ "$1" = "all" ]; then
+		export TICKLER_DOALL="yes"
+	fi
+fi
+
 # Tickler entries are inserted between 'XXX'.  So on each
 # run, delete all such lines, but keep other (presumably
 # inserted by the user) entries.
