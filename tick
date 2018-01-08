@@ -26,9 +26,10 @@ fmt() {
 	printf "%02d" $1
 }
 
+e=`date +%e`
 d=`date +%d`
-if [ $d -ne 1 ]; then
-	y=$((d-1))
+if [ $e -ne 1 ]; then
+	y=$((e-1))
 	unread=""
 	for i in `seq 1 $y`; do
 		x=$(fmt $i)
