@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Copyright (C) 2009-2017 Serge Hallyn <serge@hallyn.com>
 
@@ -25,7 +25,7 @@ def skipday(day):
 
 def process_bydate(line):
 	day = int(line[0])
-	desc = string.join(line[1:])
+	desc = " ".join(line[1:])
 	if skipday(day):
 		return
 	filename = "%02d" % day
@@ -48,7 +48,7 @@ def process_monthly(line):
 	wk = line[1]
 	start = line[2]
 	end = line[3]
-	desc = string.join(line[4:])
+	desc = " ".join(line[4:])
 	today = time.localtime()
 	y = today[0]
 	m = today[1]
@@ -78,7 +78,7 @@ def process_annual(line):
 		print("here I am with %s " % line)
 	month = line[0]
 	date = line[1]
-	desc = string.join(line[2:])
+	desc = " ".join(line[2:])
 	today = time.localtime()
 	y = today[0]
 	m = today[1]
@@ -99,7 +99,7 @@ def process_weekly(line):
 	day = line[0]
 	start = line[1]
 	end = line[2]
-	desc = string.join(line[3:])
+	desc = " ".join(line[3:])
 	today = time.localtime()
 	y = today[0]
 	m = today[1]
