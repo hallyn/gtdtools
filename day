@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ $# -ne 0 ]; then
+        echo $(date -d "$*" +%Y-%m-%d)
+else
+        echo $(date +%Y-%m-%d)
+fi
