@@ -1,0 +1,2 @@
+#!/bin/sh
+vi -o ~/gtd/next_actions.otl ~/gtd/done.otl
