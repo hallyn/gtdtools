@@ -52,6 +52,13 @@ When you run `~/gtd/tickler/update_repeating`, these will be copied to the `10` 
 
 Now, every morning you run the script `tick` to open the current day's daily file alongside `~/gtd/next_actions.otl`, to copy actions into next actions (or, move them to a different date, move them elsewhere, or just delete them).
 
+The first letter of each line dictates the type of entry, which can be:
+
+1. A(nnual): List the month and day-of-month, then description.  For birthdays and rare bills.
+2. W(eekly): Give the day of week, start and end times, then description.  Good for weekly meetings, and things like "go over GTD project list".
+3. D(ate): Same (numbered) day of every month.  Give the day (i.e. 3) and description.  For instance, useful for bills.
+4. M(onthly): Actually... I don't use this, so may drop it as it may not even work.
+
 ## GTD
 
 GTD is in my opinion an excellent workflow for managing projects and information.
@@ -86,3 +93,56 @@ $ p e car_window
 # ("p s car_window" would be a shortcut for "p n car_window; p e car_window")
 $ p co<tab> ca<tab>    # moves car_window to the Completed folder
 ```
+
+## Usage
+
+Once you've run "setup.sh" (or manually done the setup), log out and back in
+(or rehash), now you should be able to do the following.
+
+### Look at next actions
+
+Just run 'n' to edit your gtd/next_actions.otl and gtd/done.otl files.
+
+At the top of 'done.otl', type ";d" to enter separators and today's
+date.  Then start typing what you've completed.
+
+### Look at open projects
+
+'p' is an alias to 'project'.
+
+```
+serge@jerom ~$ p
+Usage:
+  project [l|list]: list projects
+  project [[e|edit] PROJ]: edit details of PROJ
+  project [[n|new] PROJ]: create new project called PROJ
+  project [[s|start] PROJ]: create new project called PROJ and edit
+  project [[c|complete] PROJ]: move project PROJ to this year's completed list
+  project [[d|delete] PROJ]: delete project PROJ
+  project [[p|postpone] PROJ]: move project to postponed list
+  project [[a|actions] PROJ]: list actions for project PROJ
+```
+
+To list projects, just
+
+```
+ubuntu@gtd:~$ p l
+Project                                 |  Last updated
+first                                   |  2022-08-18 20:50:41.968916094 +0000
+```
+
+To just create a new project, you can use "project new projectname".  You can
+then edit it with "project edit projectname".  To create a new project and
+immediately edit it, use the shortcut "project start projectname".  Editing
+a project opens vim with three files
+
+1. summary.otl: a good place to keep a description
+2. log.otl: a place to keep dated journal entries of completed work
+3. actions.otl: a place to keep nicely split up actions.
+
+The idea is to periodically look through your open projects, and copy
+actions from those actions.otl files into your next_actions.otl.  At any
+given time, next_actions.otl should be a list of simple things you can
+immediately do.  Work items which make you sit back and say "hm, to do
+that, first I'd need to..." do not belong there.  (That's the GTD concept,
+anyway)

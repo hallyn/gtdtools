@@ -13,7 +13,7 @@ cat > "${CONFIGDIR}/gtd/config" << EOF
 GTDDIR=${GTDDIR}
 EOF
 
-cp day nextactions project tick ~/bin
+cp day n nextactions project tick ~/bin
 cp insert_entry.py update_repeating "${GTDDIR}/tickler/"
 
 for month in january february march april may june july august september \
