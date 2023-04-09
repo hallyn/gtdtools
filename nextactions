@@ -6,4 +6,4 @@ CONFIGDIR=~/.config
 # User might specify different GTD dir
 [ -f "${CONFIGDIR}/gtd/config" ] && . "${CONFIGDIR}/gtd/config"
 
-cat "${GTDDIR}/next_actions.otl"
+cat "${GTDDIR}/next_actions.otl" | awk '{ print "please check: " $0 }'
